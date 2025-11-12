@@ -1,6 +1,6 @@
 ---
 title: "Group Data Assignment Week 3"
-author: "Catherina Mikhail, 2847118 Sinem Göral, 2817932 Ela Köycü 2846357"
+author: "Catherina Mikhail 2847118, Sinem Göral 2817932, Ela Köycü 2846357"
 date: "2025-11-12"
 output:
   word_document: default
@@ -211,7 +211,7 @@ tzdata2018 %>%
 tzdata2012 %>%
   group_by(region) %>%
   summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
-# Poverty gap per region 2012
+# Poverty gap per region 2018
 tzdata2018 %>%
   group_by(region) %>%
   summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
@@ -229,3 +229,28 @@ tzdata2018 %>%
   group_by(region) %>%
   summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
 ```
+3. We have computed the stratum- and region-level contribution to the national headcount rate. 
+
+- The area level contribution to the national headcount rate for 2012 is 33.29% in rural areas, 21.69% in urban areas and 4.11% in Dar es Salaam. For 2018 the contribution to the national headcount rate is 31.35% in rural areas, 19.22% in urban areas and 7.98% in Dar es Salaam.
+```{r stratum level contribution}
+# stratum level contribution 2012
+tzdata2012 %>%
+  group_by(STRATUM) %>%
+  summarise(contribution = ((sum(popwt * poor))/sum(popwt)) * 100)
+# stratum level contribution 2018
+tzdata2018 %>%
+  group_by(STRATUM) %>%
+  summarise(contribution = ((sum(popwt * poor))/sum(popwt)) * 100)
+```
+- The region level contribution to the national headcount rate for 2012 is 34.60% in Dodoma, 21.89% in Arusha,	11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar Es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65 in Ruvuma. For 2018 is 23.19% in Dodoma, 24.65% in Arusha,	10.52% in Kilimanjaro, 20.95% in Tanga, 19.31% in Morogoro, 27.88% in Pwani, 7.98% in Dar Es Salaam, 38.01% in Lindi, 29.14% in Mtwara and 30.60 in Ruvuma.  
+```{r region level contribution}
+# region level contribution 2012
+tzdata2012 %>%
+  group_by(region) %>%
+  summarise(contribution = ((sum(popwt * poor))/sum(popwt)) * 100)
+# region level contribution 2018
+tzdata2018 %>%
+  group_by(region) %>%
+  summarise(contribution = ((sum(popwt * poor))/sum(popwt)) * 100)
+```
+
