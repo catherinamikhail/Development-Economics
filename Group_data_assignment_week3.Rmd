@@ -5,6 +5,9 @@ date: "2025-11-12"
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+#Set up packages
+library(dplyr)
 # Set up the datafiles for 2012
 # Use the 'survey' package. Install it if necessary
 check <- require('survey')
@@ -87,7 +90,131 @@ tzdesign2 <- svydesign(
 )
 ```
 
+1.a. Using the data files on Tanzania, we have computed the headcount, poverty gap and squared poverty gap on the national level. - We used the formula H = q/N, where q is the amount of people considered poor and N the total population. For 2012 we discovered that around 28.17% of the population is considered poor using the headcount method. For 2018 we discovered that around 26.39% of the population is considered poor using the headcount method.
 
-```{r 1.a.}
+```{r Headcount}
+## National headcount for 2012
+# First we determine which households are poor by looking at who's consumption is below the poverty line
+tzdata2012$poor <- ifelse(tzdata2012$cons <= tzdata2012$povline, 1, 0)
+# Then we calculate the amount of people those households represent
+sum(tzdata2012$popwt * tzdata2012$poor, na.rm = TRUE)
+# Then we calculate the headcount H = q/N
+sum(tzdata2012$popwt * tzdata2012$poor, na.rm = TRUE)/sum(tzdata2012$popwt)
+
+## National headcount for 2012
+# First we determine which households are poor by looking at who's consumption is below the poverty line
+tzdata2018$poor <- ifelse(tzdata2018$cons <= tzdata2018$povline, 1, 0)
+# Then we calculate the amount of people those households represent
+sum(tzdata2018$popwt * tzdata2018$poor, na.rm = TRUE)
+# Then we calculate the headcount H = q/N
+sum(tzdata2018$popwt * tzdata2018$poor, na.rm = TRUE)/sum(tzdata2018$popwt)
+```
+
+-   We used the formula 1/N \* sum(q \* (z / (z - y))), where z is the poverty line and y is consumption, to compute the poverty gap. For 2012 we discovered that the average poor person is falling short of the poverty line by 6.70%. For 2018 we discovered that the average poor person is falling short of the poverty line by 6.16%.
+
+```{r Poverty Gap}
+## National Poverty Gap for 2012
+# First we determine the gap ratio = (poverty line - consumption)/poverty line for all people considered poor
+tzdata2012$gapratio <- with(tzdata2012, (povline-cons)/povline * tzdata2012$poor)
+# Then we calculate the poverty gap by PG= 1/N * (gap ratio * weighted population)
+(1/sum(tzdata2012$popwt)) * sum(tzdata2012$gapratio * tzdata2012$popwt)
+
+## National Poverty Gap for 2018
+# First we determine the gap ratio = (poverty line - consumption)/poverty line for all people considered poor
+tzdata2018$gapratio <- with(tzdata2018, (povline-cons)/povline * tzdata2018$poor)
+# Then we calculate the poverty gap by PG= 1/N * (gap ratio * weighted population)
+(1/sum(tzdata2018$popwt)) * sum(tzdata2018$gapratio * tzdata2018$popwt)
 
 ```
+
+-   We used the formula 1/N \* sum(q \* ((z / (z - y))\^2)) to compute the squared poverty gap. For 2012 we discovered that on average, the income shortfall of poor households relative to the poverty line is 12.82% when giving greater weight to the poorest. For 2018 this was 11.83%.
+
+```{r Squared Povert Gap}
+## National Poverty Gap for 2012
+# First we determine the square gap ratio = (poverty line - consumption)/poverty)^2 / poverty line for all people considered poor
+tzdata2012$squaregapratio <- with(tzdata2012, (sqrt((povline-cons)/povline * tzdata2012$poor)))
+# Then we calculate the square poverty gap by PG= 1/N * (square gap ratio * weighted population)
+(1/sum(tzdata2012$popwt)) * sum(tzdata2012$squaregapratio * tzdata2012$popwt)
+
+## National Poverty Gap for 2018
+# First we determine the square gap ratio = (poverty line - consumption)/poverty)^2 / line for all people considered poor
+tzdata2018$squaregapratio <- with(tzdata2018, (sqrt((povline-cons)/povline * tzdata2018$poor)))
+# Then we calculate the square poverty gap by PG= 1/N * (square gap ratio * weighted population)
+(1/sum(tzdata2018$popwt)) * sum(tzdata2018$squaregapratio * tzdata2018$popwt)
+```
+
+1.b. Using the data files on Tanzania, we have computed the headcount, poverty gap and squared poverty gap on the area level. 
+- Looking at the headcount per area we have discovered for 2012 33.29% in rural areas, 21.69% in urban areas and 4.11% in Dar es Salaam are considered poor. For 2018 31.35% in rural areas, 19.22% in urban areas and 7.98% in Dar es Salaam is considered poor.
+
+```{r Headcount}
+# Headcount per area 2012
+tzdata2012 %>%
+  group_by(STRATUM) %>%
+  summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
+# Headcount per area 2018
+tzdata2018 %>%
+  group_by(STRATUM) %>%
+  summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
+```
+
+-   Computing the poverty gap per area we found out that for 2012 the average poor person is falling short of the poverty line by 7.84% in rural areas, 5.51% in urban areas and 0.83% in Dar es Salaam. For 2018 the average poor person is falling short of the poverty line by 7.40% in rural areas, 4.16% in urban areas and 2.03% in Dar es Salaam.
+
+```{r Poverty Gap}
+# Poverty gap per area 2012
+tzdata2012 %>%
+  group_by(STRATUM) %>%
+  summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
+# Poverty gap per area 2012
+tzdata2018 %>%
+  group_by(STRATUM) %>%
+  summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
+```
+
+-   Computing the squared poverty gap per area we discovered that for 2012 on average, the income shortfall of poor households relative to the poverty line is 15.11% in rural areas, 10.09% in urban areas and 1.69% in Dar es Salaam. For 2018 on average, the income shortfall of poor households relative to the poverty line is 14.14% in rural areas, 8.22% in urban areas and 3.84% in Dar es Salaam.
+
+```{r Squared Poverty Gap}
+# Squared poverty gap per area 2012
+tzdata2012 %>%
+  group_by(STRATUM) %>%
+  summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
+# Squared poverty gap per area 2018
+tzdata2018 %>%
+  group_by(STRATUM) %>%
+  summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
+```
+1.c. Using the data files on Tanzania, we have computed the headcount, poverty gap and squared poverty gap on the region level.
+- Looking at the headcount per area we have discovered for 2012 34.60% in Dodoma, 21.89% in Arusha, 11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65% in Ruvumaare considered poor. For 2012 34.60% in Dodoma, 21.89% in Arusha, 11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65% in Ruvumaare considered poor.
+```{r Headcount}
+# Headcount per region 2012
+tzdata2012 %>%
+  group_by(region) %>%
+  summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
+# Headcount per region 2018
+tzdata2018 %>%
+  group_by(region) %>%
+  summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
+```
+-
+```{r Poverty Gap}
+# Poverty gap per region 2012
+tzdata2012 %>%
+  group_by(region) %>%
+  summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
+# Poverty gap per region 2012
+tzdata2018 %>%
+  group_by(region) %>%
+  summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
+```
+-
+```{r Squared Poverty Gap}
+# Squared poverty gap per region 2012
+tzdata2012 %>%
+  group_by(region) %>%
+  summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
+# Squared poverty gap per region 2018
+tzdata2018 %>%
+  group_by(region) %>%
+  summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
+```
+
+
