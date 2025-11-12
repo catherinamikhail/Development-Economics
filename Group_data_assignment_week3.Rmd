@@ -183,7 +183,7 @@ tzdata2018 %>%
   summarise(squared_poverty_gap = (1/sum(popwt)) * sum(squaregapratio * popwt))
 ```
 1.c. Using the data files on Tanzania, we have computed the headcount, poverty gap and squared poverty gap on the region level.
-- Looking at the headcount per area we have discovered for 2012 34.60% in Dodoma, 21.89% in Arusha, 11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65% in Ruvumaare considered poor. For 2012 34.60% in Dodoma, 21.89% in Arusha, 11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65% in Ruvumaare considered poor.
+- Looking at the headcount per area we have discovered for 2012 34.60% in Dodoma, 21.89% in Arusha, 11.38% in Kilimanjaro, 30.74% in Tanga, 11.13% in Morogoro, 16.01% in Pwani, 4.11% in Dar es Salaam, 17.74% in Lindi, 41.39% in Mtwara and 53.65% in Ruvumaare considered poor. For 2018 23.19% in Dodoma, 24.65% in Arusha, 10.52% in Kilimanjaro, 20.95% in Tanga, 19.31% in Morogoro, 27.88% in Pwani, 7.98% in Dar es Salaam, 38.01% in Lindi, 29.14% in Mtwara and 30.60% in Ruvumaare considered poor.
 ```{r Headcount}
 # Headcount per region 2012
 tzdata2012 %>%
@@ -194,7 +194,7 @@ tzdata2018 %>%
   group_by(region) %>%
   summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
 ```
--
+- Computing the poverty gap per area we found out that for 2012 the average poor person is falling short of the poverty line by 7.09% in Dodoma, 6.02% in Arusha, 1.81% in Kilimanjaro, 6.78% in Tanga, 2.38% in Morogoro, 3.53% in Pwani, 0.82% in Dar es Salaam, 2.19% in Lindi, 11.83% in Mtwara and 15.55% in Ruvumaare considered poor. For 2018 the average poor person is falling short of the poverty line by 4.05% in Dodoma, 5.75% in Arusha, 1.66% in Kilimanjaro, 5.06% in Tanga, 3.68% in Morogoro, 8.73% in Pwani, 2.03% in Dar es Salaam, 9.58% in Lindi, 5.93% in Mtwara and 6.69% in Ruvumaare considered poor.
 ```{r Poverty Gap}
 # Poverty gap per region 2012
 tzdata2012 %>%
@@ -205,7 +205,7 @@ tzdata2018 %>%
   group_by(region) %>%
   summarise(poverty_gap = (1/sum(popwt)) * sum(gapratio * popwt))
 ```
--
+- Computing the squared poverty gap per area we discovered that for 2012 on average, the income shortfall of poor households relative to the poverty line is 14.65% in Dodoma, 10.70% in Arusha, 4.12% in Kilimanjaro, 13.52% in Tanga, 4.78% in Morogoro, 6.92% in Pwani, 1.69% in Dar es Salaam, 5.70% in Lindi, 20.17% in Mtwara and 26.99% in Ruvumaare. For 2018 on average, the income shortfall of poor households relative to the poverty line is 8.82% in Dodoma, 11.07% in Arusha, 3.83% in Kilimanjaro, 9.62% in Tanga, 7.75% in Morogoro, 14.81% in Pwani, 3.84% in Dar es Salaam, 18.01% in Lindi, 11.75% in Mtwara and 13.22% in Ruvumaare. 
 ```{r Squared Poverty Gap}
 # Squared poverty gap per region 2012
 tzdata2012 %>%
