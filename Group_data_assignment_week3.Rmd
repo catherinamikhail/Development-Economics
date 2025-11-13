@@ -3,94 +3,74 @@ title: "Group Data Assignment Week 3"
 author: "Catherina Mikhail 2847118, Sinem Göral 2817932, Ela Köycü 2846357"
 date: "2025-11-12"
 output:
-  word_document: default
-  pdf_document: default
+  word_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(include = FALSE)
-#Set up packages
-library(dplyr)
-# Set up the datafiles for 2012
-# Use the 'survey' package. Install it if necessary
+knitr::opts_chunk$set(
+  echo = TRUE,      
+  warning = FALSE, 
+  message = FALSE,  
+  results = 'markup' 
+)
+# First we need to make sure that some packages (=places where e.g. commands are 
+#saved) are available, for this, we need to install them
+#for this, we create a variable called check, (see in your Enviroment 
+#what value it takes after having run the line), it takes TRUE if the package is 
+#already installed and FALSE if not
 check <- require('survey')
+#next, we have a loop that has a condition (!check, this condition is TRUE if check is FALSE and FALSE if check is TRUE)
+#i.e. if it is already installed, the loop will not do anything, if it is not instaled, it will install it
+#Depending on your version, you might need to enter YES in the console to confirm that you want to install it
 if(!check) {
-  install.packages('survey')
-  library(survey)
+     install.packages('survey')
 }
-rm(check)
+#just because it is installed does not mean that it is loaded into your current session (the one you run this file in), therefore we execute the following code
+library(survey)  
+#to learn about the package
+?survey
 
-# Use the 'readstata13' package to read Stata's data files. Install it if necessary
+#now to the next package that will allow us to load the files we have easily into R
 check <- require('readstata13')
+#if not installed, install the package, this needs to be confirmed by typing in yes in the command console, after having run the following line
 if(!check) {
-  install.packages('readstata13')
-  library(readstata13)
-}
+       install.packages('readstata13')
+     }
+library('readstata13')  
+#to learn about the package
+?readstata13
+
+#some housekeeping
 rm(check)
 
-# Read in data
-# statafile <- 'u:/interim files/Tanzania 2012.dta'
-statafile1 <- '~/Documents/GitHub/Development-Economics/Tanzania_2012.dta'
-tzdata2012 <- read.dta13(statafile1, nonint.factors = TRUE)
+# now finally: Read in data
 
-# Remove any missing data
-keep_cases <- !with(tzdata2012,
-                    is.na(cons) | is.na(STRATUM) | is.na(CLUSTER) | is.na(hhsize) | is.na(hhweight)
-)
-tzdata2012 <- tzdata2012[keep_cases, ]
-rm(keep_cases)
+#for this: we create the filepath either per hand, see the line below, 
+#or we use the point-and-shoot-option (often easier if you donot feel comfortable with R or coding yet)
 
-# Define new variables
-tzdata2012$popwt <- with(tzdata2012, hhsize * hhweight)
+#statafile <- 'u:/interim files/Tanzania 2012.dta' #if you want to use this, delete the # at the beginning and type in the correct path
+statafile2012 <- file.choose() #allows for clicking on it in a window, no need to have the path ready, click here on the file "Tanzania_2012.dta"
+#load it
+statafile2018 <- file.choose() #click here on the file "Tanzania_2018.dta"
+tzdata2012 <- read.dta13(statafile2012,nonint.factors = T)
+tzdata2018 = read.dta13(statafile2018,nonint.factors = T)
+  
+# Remove observations with missing data 
+tzdata2012 <- na.omit(tzdata2012)
+tzdata2018 <- na.omit(tzdata2018)
+#create population-weight (popwt) as a variable
+tzdata2012$popwt <- with(tzdata2012,hhsize*hhweight)
+tzdata2018$popwt <- with(tzdata2018,hhsize*hhweight)
+                          
+#incorporate the surveydesign: for this, use the information about strata, weights and ID from the data
+tzdesign2012 <- svydesign(id = ~CLUSTER, strata = ~STRATUM, weights = ~popwt, nest =T,  data = tzdata2012)
+tzdesign2018 <- svydesign(id = ~CLUSTER, strata = ~STRATUM, weights = ~popwt, nest = T, data = tzdata2018)
+#
 
-# Set survey design parameters
-tzdesign1 <- svydesign(
-  id = ~CLUSTER,
-  strata = ~STRATUM,
-  weights = ~popwt,
-  data = tzdata2012
-)
+#This is the end for the first round of the survey (either 2012 and 2018), 
+#now you will have to repeat the code for the other round, however, no need to load (or install) the packages again, good luck!
 
-# Set up the datafiles for 2018
-# Use the 'survey' package. Install it if necessary
-check <- require('survey')
-if(!check) {
-  install.packages('survey')
-  library(survey)
-}
-rm(check)
-
-# Use the 'readstata13' package to read Stata's data files. Install it if necessary
-check <- require('readstata13')
-if(!check) {
-  install.packages('readstata13')
-  library(readstata13)
-}
-rm(check)
-
-# Read in data
-# statafile <- 'u:/interim files/Tanzania 2012.dta'
-statafile2 <- '~/Documents/GitHub/Development-Economics/Tanzania_2018.dta'
-tzdata2018 <- read.dta13(statafile2, nonint.factors = TRUE)
-
-# Remove any missing data
-keep_cases <- !with(tzdata2018,
-                    is.na(cons) | is.na(STRATUM) | is.na(CLUSTER) | is.na(hhsize) | is.na(hhweight)
-)
-tzdata2018 <- tzdata2018[keep_cases, ]
-rm(keep_cases)
-
-# Define new variables
-tzdata2018$popwt <- with(tzdata2018, hhsize * hhweight)
-
-# Set survey design parameters
-tzdesign2 <- svydesign(
-  id = ~CLUSTER,
-  strata = ~STRATUM,
-  weights = ~popwt,
-  data = tzdata2018,
-  nest = TRUE
-)
 ```
 
 1.a. Using the data files on Tanzania, we have computed the headcount, poverty gap and squared poverty gap on the national level.
@@ -154,6 +134,7 @@ tzdata2018$squaregapratio <- with(tzdata2018, (sqrt((povline-cons)/povline * tzd
 
 ```{r Headcount Area, echo=TRUE}
 # Headcount per area 2012
+library(tidyverse)
 tzdata2012 %>%
   group_by(STRATUM) %>%
   summarise(headcount = sum(popwt * poor, na.rm = TRUE)/sum(popwt))
