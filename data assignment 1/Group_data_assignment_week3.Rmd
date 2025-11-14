@@ -5,6 +5,8 @@ date: "2025-11-12"
 output:
   word_document:
     toc: true
+  pdf_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
