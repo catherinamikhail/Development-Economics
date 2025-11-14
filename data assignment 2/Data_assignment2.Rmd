@@ -7,24 +7,101 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+tzdata <- Tanzania_2018_new
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r exercise 2}
+# Creating a variable calles "poor", where if consumption is equal or lower than the poverty line it wil give a 1 and if it is higher it will give a zero (those are considered not poor).
+tzdata$poor <- ifelse(tzdata$cons <= tzdata$povline, 1, 0)
 ```
 
-## Including Plots
+```{r exercise 3}
+## Females 7-12
+# Create separate data from for females between age 7-12 considered poor who are in school.
+schoolyoung_f <- tzdata %>%
+  filter(age >= 7 & age <= 12,
+         male == 0,
+         poor == 1,
+         inschool == 1)
 
-You can also embed plots, for example:
+# Create separate data from for females between age 7-12 considered poor both in and out of school.
+young_f <- tzdata %>%
+  filter(age >= 7 & age <= 12,
+         male == 0,
+         poor == 1)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+# Calculate the percentage of females considered poor between ages 7-12 who are in school.
+schoolyoung_f %>%
+  group_by(LOC) %>%
+  summarise(fy_inschool = (sum(popweight) / sum(young_f$popweight)) * 100)
+
+## Females 13-18
+# Create separate data from for females between age 13-18 considered poor who are in school.
+schoolold_f <- tzdata %>%
+  filter(age >= 13 & age <= 18,
+         male == 0,
+         poor == 1,
+         inschool == 1)
+
+# Create separate data from for females between age 13-18 considered poor both in and out of school.
+old_f <- tzdata %>%
+  filter(age >= 13 & age <= 18,
+         male == 0,
+         poor == 1)
+
+# Calculate the percentage of females considered poor between ages 13-18 who are in school.
+schoolold_f %>%
+  group_by(LOC) %>%
+  summarise(fo_inschool = (sum(popweight) / sum(young_f$popweight)) * 100)
+
+
+## Males 7-12
+# Create separate data from for males between age 7-12 considered poor who are in school.
+schoolyoung_m <- tzdata %>%
+  filter(age >= 7 & age <= 12,
+         male == 1,
+         poor == 1,
+         inschool == 1)
+
+# Create separate data from for males between age 7-12 considered poor both in and out of school.
+young_m <- tzdata %>%
+  filter(age >= 7 & age <= 12,
+         male == 1,
+         poor == 1)
+
+# Calculate the percentage of males considered poor between ages 7-12 who are in school.
+schoolyoung_m %>%
+  group_by(LOC) %>%
+  summarise(my_inschool = (sum(popweight) / sum(young_m$popweight)) * 100)
+
+## Males 13-18
+# Create separate data from for males between age 13-18 considered poor who are in school.
+schoolold_m <- tzdata %>%
+  filter(age >= 13 & age <= 18,
+         male == 1,
+         poor == 1,
+         inschool == 1)
+
+# Create separate data from for males between age 13-18 considered poor both in and out of school.
+old_m <- tzdata %>%
+  filter(age >= 13 & age <= 18,
+         male == 1,
+         poor == 1)
+
+# Calculate the percentage of males considered poor between ages 13-18 who are in school.
+#schoolold_m %>%
+  #group_by(STRATUM, LOC) %>%
+  #summarise(mo_inschool = (sum(popweight) / sum(young_m$popweight)) * 100)
+schoolold_m %>%
+  group_by(LOC) %>%
+  summarise(mo_inschool = (sum(popweight) / sum(old_m$popweight)) * 100)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r exercise 5}
+tzdata %>%
+  group_by(freebooks) %>%
+  summarise(enrollment_rate = weighted.mean(inschool_later, popweight, na.rm = TRUE))
+
+```
+
