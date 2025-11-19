@@ -12,96 +12,81 @@ tzdata <- Tanzania_2018_new
 ```
 
 ```{r exercise 2}
-# Creating a variable calles "poor", where if consumption is equal or lower than the poverty line it wil give a 1 and if it is higher it will give a zero (those are considered not poor).
+# Creating a variable called "poor", where if consumption is equal or lower than the poverty line it will give a 1 and if it is higher it will give a zero (those are considered not poor).
 tzdata$poor <- ifelse(tzdata$cons <= tzdata$povline, 1, 0)
 ```
 
+
 ```{r exercise 3}
-## Females 7-12
-# Create separate data from for females between age 7-12 considered poor who are in school.
-schoolyoung_f <- tzdata %>%
-  filter(age >= 7 & age <= 12,
-         male == 0,
-         poor == 1,
-         inschool == 1)
-
-# Create separate data from for females between age 7-12 considered poor both in and out of school.
-young_f <- tzdata %>%
+### Females 7–12
+f_7_12 <- tzdata %>%
   filter(age >= 7 & age <= 12,
          male == 0,
          poor == 1)
 
-# Calculate the percentage of females considered poor between ages 7-12 who are in school.
-schoolyoung_f %>%
+f_7_12_pct <- f_7_12 %>%
   group_by(LOC) %>%
-  summarise(fy_inschool = (sum(popweight) / sum(young_f$popweight)) * 100)
+  summarise(pct_in_school = 100 * sum(popweight * inschool) / sum(popweight))
 
-## Females 13-18
-# Create separate data from for females between age 13-18 considered poor who are in school.
-schoolold_f <- tzdata %>%
-  filter(age >= 13 & age <= 18,
-         male == 0,
-         poor == 1,
-         inschool == 1)
 
-# Create separate data from for females between age 13-18 considered poor both in and out of school.
-old_f <- tzdata %>%
+
+### Females 13–18
+f_13_18 <- tzdata %>%
   filter(age >= 13 & age <= 18,
          male == 0,
          poor == 1)
 
-# Calculate the percentage of females considered poor between ages 13-18 who are in school.
-schoolold_f %>%
+f_13_18_pct <- f_13_18 %>%
   group_by(LOC) %>%
-  summarise(fo_inschool = (sum(popweight) / sum(young_f$popweight)) * 100)
+  summarise(pct_in_school = 100 * sum(popweight * inschool) / sum(popweight))
 
 
-## Males 7-12
-# Create separate data from for males between age 7-12 considered poor who are in school.
-schoolyoung_m <- tzdata %>%
-  filter(age >= 7 & age <= 12,
-         male == 1,
-         poor == 1,
-         inschool == 1)
 
-# Create separate data from for males between age 7-12 considered poor both in and out of school.
-young_m <- tzdata %>%
+### Males 7–12
+m_7_12 <- tzdata %>%
   filter(age >= 7 & age <= 12,
          male == 1,
          poor == 1)
 
-# Calculate the percentage of males considered poor between ages 7-12 who are in school.
-schoolyoung_m %>%
+m_7_12_pct <- m_7_12 %>%
   group_by(LOC) %>%
-  summarise(my_inschool = (sum(popweight) / sum(young_m$popweight)) * 100)
+  summarise(pct_in_school = 100 * sum(popweight * inschool) / sum(popweight))
 
-## Males 13-18
-# Create separate data from for males between age 13-18 considered poor who are in school.
-schoolold_m <- tzdata %>%
-  filter(age >= 13 & age <= 18,
-         male == 1,
-         poor == 1,
-         inschool == 1)
 
-# Create separate data from for males between age 13-18 considered poor both in and out of school.
-old_m <- tzdata %>%
+
+### Males 13–18
+m_13_18 <- tzdata %>%
   filter(age >= 13 & age <= 18,
          male == 1,
          poor == 1)
 
-# Calculate the percentage of males considered poor between ages 13-18 who are in school.
-#schoolold_m %>%
-  #group_by(STRATUM, LOC) %>%
-  #summarise(mo_inschool = (sum(popweight) / sum(young_m$popweight)) * 100)
-schoolold_m %>%
+m_13_18_pct <- m_13_18 %>%
   group_by(LOC) %>%
-  summarise(mo_inschool = (sum(popweight) / sum(old_m$popweight)) * 100)
+  summarise(pct_in_school = 100 * sum(popweight * inschool) / sum(popweight))
+
+
+## Now we arrange it into a neat table.
+# Round each percentage to 1 decimal.
+f_7_12_pct <- f_7_12_pct %>% mutate(Female_7_12 = round(pct_in_school, 1)) %>% select(LOC, Female_7_12)
+f_13_18_pct <- f_13_18_pct %>% mutate(Female_13_18 = round(pct_in_school, 1)) %>% select(LOC, Female_13_18)
+m_7_12_pct <- m_7_12_pct %>% mutate(Male_7_12 = round(pct_in_school, 1)) %>% select(LOC, Male_7_12)
+m_13_18_pct <- m_13_18_pct %>% mutate(Male_13_18 = round(pct_in_school, 1)) %>% select(LOC, Male_13_18)
+
+# Combine into one table.
+combined_pct <- f_7_12_pct %>%
+  left_join(f_13_18_pct, by = "LOC") %>%
+  left_join(m_7_12_pct, by = "LOC") %>%
+  left_join(m_13_18_pct, by = "LOC")
+
+print(combined_pct)
+
 ```
+
 
 ```{r exercise 5}
 tzdata %>%
   group_by(freebooks) %>%
-  summarise(enrollment_rate = weighted.mean(inschool_later, popweight, na.rm = TRUE))
+  summarise(enrollment_rate = weighted.mean(inschool_later, popweight, na.rm = TRUE) * 100)
 
 ```
 
