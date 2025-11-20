@@ -2,13 +2,15 @@
 title: "Data_assignment2"
 author: "Catherina Mikhail 2847118, Sinem Göral 2817932, Ela Köycü 2846357"
 date: "2025-11-14"
-output: pdf_document
+output: word_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
-tzdata <- Tanzania_2018_new
+load("~/GitHub/Development-Economics/data assignment 2/Tanzania_2018_new-1_fixed.rdata")
+tzdata <-Tanzania_2018_new
+  
 ```
 
 ```{r exercise 2}

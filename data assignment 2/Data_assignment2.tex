@@ -1,0 +1,212 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Data\_assignment2},
+  pdfauthor={Catherina Mikhail 2847118, Sinem Göral 2817932, Ela Köycü 2846357},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Data\_assignment2}
+\author{Catherina Mikhail 2847118, Sinem Göral 2817932, Ela Köycü
+2846357}
+\date{2025-11-14}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Creating a variable called "poor", where if consumption is equal or lower than the poverty line it will give a 1 and if it is higher it will give a zero (those are considered not poor).}
+\NormalTok{tzdata}\SpecialCharTok{$}\NormalTok{poor }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(tzdata}\SpecialCharTok{$}\NormalTok{cons }\SpecialCharTok{\textless{}=}\NormalTok{ tzdata}\SpecialCharTok{$}\NormalTok{povline, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# Females 7–12}
+\NormalTok{f\_7\_12 }\OtherTok{\textless{}{-}}\NormalTok{ tzdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(age }\SpecialCharTok{\textgreater{}=} \DecValTok{7} \SpecialCharTok{\&}\NormalTok{ age }\SpecialCharTok{\textless{}=} \DecValTok{12}\NormalTok{,}
+\NormalTok{         male }\SpecialCharTok{==} \DecValTok{0}\NormalTok{,}
+\NormalTok{         poor }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{f\_7\_12\_pct }\OtherTok{\textless{}{-}}\NormalTok{ f\_7\_12 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(LOC) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{pct\_in\_school =} \DecValTok{100} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(popweight }\SpecialCharTok{*}\NormalTok{ inschool) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(popweight))}
+
+
+
+\DocumentationTok{\#\#\# Females 13–18}
+\NormalTok{f\_13\_18 }\OtherTok{\textless{}{-}}\NormalTok{ tzdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(age }\SpecialCharTok{\textgreater{}=} \DecValTok{13} \SpecialCharTok{\&}\NormalTok{ age }\SpecialCharTok{\textless{}=} \DecValTok{18}\NormalTok{,}
+\NormalTok{         male }\SpecialCharTok{==} \DecValTok{0}\NormalTok{,}
+\NormalTok{         poor }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{f\_13\_18\_pct }\OtherTok{\textless{}{-}}\NormalTok{ f\_13\_18 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(LOC) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{pct\_in\_school =} \DecValTok{100} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(popweight }\SpecialCharTok{*}\NormalTok{ inschool) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(popweight))}
+
+
+
+\DocumentationTok{\#\#\# Males 7–12}
+\NormalTok{m\_7\_12 }\OtherTok{\textless{}{-}}\NormalTok{ tzdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(age }\SpecialCharTok{\textgreater{}=} \DecValTok{7} \SpecialCharTok{\&}\NormalTok{ age }\SpecialCharTok{\textless{}=} \DecValTok{12}\NormalTok{,}
+\NormalTok{         male }\SpecialCharTok{==} \DecValTok{1}\NormalTok{,}
+\NormalTok{         poor }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{m\_7\_12\_pct }\OtherTok{\textless{}{-}}\NormalTok{ m\_7\_12 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(LOC) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{pct\_in\_school =} \DecValTok{100} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(popweight }\SpecialCharTok{*}\NormalTok{ inschool) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(popweight))}
+
+
+
+\DocumentationTok{\#\#\# Males 13–18}
+\NormalTok{m\_13\_18 }\OtherTok{\textless{}{-}}\NormalTok{ tzdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(age }\SpecialCharTok{\textgreater{}=} \DecValTok{13} \SpecialCharTok{\&}\NormalTok{ age }\SpecialCharTok{\textless{}=} \DecValTok{18}\NormalTok{,}
+\NormalTok{         male }\SpecialCharTok{==} \DecValTok{1}\NormalTok{,}
+\NormalTok{         poor }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{m\_13\_18\_pct }\OtherTok{\textless{}{-}}\NormalTok{ m\_13\_18 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(LOC) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{pct\_in\_school =} \DecValTok{100} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(popweight }\SpecialCharTok{*}\NormalTok{ inschool) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(popweight))}
+
+
+\DocumentationTok{\#\# Now we arrange it into a neat table.}
+\CommentTok{\# Round each percentage to 1 decimal.}
+\NormalTok{f\_7\_12\_pct }\OtherTok{\textless{}{-}}\NormalTok{ f\_7\_12\_pct }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Female\_7\_12 =} \FunctionTok{round}\NormalTok{(pct\_in\_school, }\DecValTok{1}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(LOC, Female\_7\_12)}
+\NormalTok{f\_13\_18\_pct }\OtherTok{\textless{}{-}}\NormalTok{ f\_13\_18\_pct }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Female\_13\_18 =} \FunctionTok{round}\NormalTok{(pct\_in\_school, }\DecValTok{1}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(LOC, Female\_13\_18)}
+\NormalTok{m\_7\_12\_pct }\OtherTok{\textless{}{-}}\NormalTok{ m\_7\_12\_pct }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Male\_7\_12 =} \FunctionTok{round}\NormalTok{(pct\_in\_school, }\DecValTok{1}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(LOC, Male\_7\_12)}
+\NormalTok{m\_13\_18\_pct }\OtherTok{\textless{}{-}}\NormalTok{ m\_13\_18\_pct }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Male\_13\_18 =} \FunctionTok{round}\NormalTok{(pct\_in\_school, }\DecValTok{1}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(LOC, Male\_13\_18)}
+
+\CommentTok{\# Combine into one table.}
+\NormalTok{combined\_pct }\OtherTok{\textless{}{-}}\NormalTok{ f\_7\_12\_pct }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(f\_13\_18\_pct, }\AttributeTok{by =} \StringTok{"LOC"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(m\_7\_12\_pct, }\AttributeTok{by =} \StringTok{"LOC"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(m\_13\_18\_pct, }\AttributeTok{by =} \StringTok{"LOC"}\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(combined\_pct)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 5
+##     LOC Female_7_12 Female_13_18 Male_7_12 Male_13_18
+##   <dbl>       <dbl>        <dbl>     <dbl>      <dbl>
+## 1     1        84.1         49.1      80.6       52.1
+## 2     2        94.2         61        94.5       62.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tzdata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(freebooks) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{enrollment\_rate =} \FunctionTok{weighted.mean}\NormalTok{(inschool\_later, popweight, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   freebooks enrollment_rate
+##       <dbl>           <dbl>
+## 1         0            73.9
+## 2         1            76.5
+\end{verbatim}
+
+\end{document}
